@@ -4,26 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { apiRequest } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { Search, XCircle, Clock, Coffee, Grid, Wheat, Croissant, CakeSlice } from 'lucide-react-native';
+import { Search, XCircle, Clock, Coffee } from 'lucide-react-native';
 import HomeHeader from '../../components/HomeHeader';
-
-// Helper para selecionar os ícones de categoria
-const getCategoryIcon = (categoryName: string, color: string, size = 16) => {
-  switch (categoryName) {
-    case 'Todos':
-      return <Grid size={size} color={color} />;
-    case 'Pães':
-      return <Wheat size={size} color={color} />;
-    case 'Folhados':
-      return <Croissant size={size} color={color} />;
-    case 'Doces':
-      return <CakeSlice size={size} color={color} />;
-    case 'Bebidas':
-      return <Coffee size={size} color={color} />;
-    default:
-      return <Grid size={size} color={color} />;
-  }
-};
+import CategoryFilter from '../../components/CategoryFilter';
 
 export default function ClientHomeScreen() {
   const router = useRouter();
@@ -34,21 +17,21 @@ export default function ClientHomeScreen() {
   const categories = ['Todos', 'Pães', 'Folhados', 'Doces', 'Bebidas'];
 
   // 1. Buscar produtos do catálogo
-  const { 
-    data: products = [], 
-    isLoading: loadingProducts, 
+  const {
+    data: products = [],
+    isLoading: loadingProducts,
     refetch: refetchProducts,
-    isRefetching: refetchingProducts 
+    isRefetching: refetchingProducts
   } = useQuery({
     queryKey: ['products', selectedCategory, search],
     queryFn: () => apiRequest(`/products?category=${selectedCategory === 'Todos' ? '' : selectedCategory}&search=${search}`)
   });
 
   // 2. Buscar produção diária de hoje
-  const { 
-    data: production = [], 
-    isLoading: loadingProduction, 
-    refetch: refetchProduction 
+  const {
+    data: production = [],
+    isLoading: loadingProduction,
+    refetch: refetchProduction
   } = useQuery({
     queryKey: ['production-today'],
     queryFn: () => apiRequest('/production')
@@ -87,7 +70,7 @@ export default function ClientHomeScreen() {
   };
 
   return (
-    <ScrollView 
+    <ScrollView
       className="flex-1 bg-cream-light dark:bg-[#150d0a]"
       refreshControl={<RefreshControl refreshing={refetchingProducts} onRefresh={onRefresh} />}
     >
@@ -115,43 +98,18 @@ export default function ClientHomeScreen() {
           </View>
         </View>
 
-        {/* Categorias (Abas) - Subiu para ficar logo abaixo da busca */}
-        <View className="mt-6">
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
-            contentContainerStyle={{ paddingLeft: 24, paddingRight: 8 }}
-          >
-            {categories.map((cat) => {
-              const isSelected = selectedCategory === cat;
-              return (
-                <TouchableOpacity
-                  key={cat}
-                  onPress={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2.5 rounded-full mr-3 border flex-row items-center ${
-                    isSelected 
-                      ? 'bg-tiffany border-tiffany' 
-                      : 'bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700'
-                  }`}
-                >
-                  {getCategoryIcon(cat, isSelected ? '#fff' : '#666')}
-                  <Text className={`font-semibold text-xs ml-1.5 ${isSelected ? 'text-white' : 'text-gray-600 dark:text-gray-300'}`}>
-                    {cat}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
+        {/* Categorias Componentizadas */}
+        <CategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
 
         {/* Produção do Dia (Destaque do Dia) - Agora filtrada também */}
         {filteredProduction.length > 0 && (
           <View className="mt-8">
             <View className="px-6 flex-row items-center justify-between mb-4">
               <Text className="text-lg font-bold text-tiffany dark:text-cream">Produção de Hoje</Text>
-              <View className="bg-tiffany/10 px-3 py-1 rounded-full">
-                <Text className="text-tiffany text-xs font-semibold">Saídas Frescas</Text>
-              </View>
             </View>
 
             <FlatList
@@ -163,19 +121,19 @@ export default function ClientHomeScreen() {
               renderItem={({ item }) => {
                 const available = item.targetQuantity - item.soldQuantity;
                 return (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => handleProductPress(item.product.id)}
                     className="bg-white dark:bg-zinc-800 w-48 mr-4 p-3 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm"
                   >
-                    <Image 
-                      source={{ uri: item.product.images[0] }} 
-                      className="w-full h-28 rounded-xl bg-gray-100" 
+                    <Image
+                      source={{ uri: item.product.images[0] }}
+                      className="w-full h-28 rounded-xl bg-gray-100"
                       resizeMode="cover"
                     />
                     <Text className="text-gray-800 dark:text-gray-100 font-bold text-sm mt-2" numberOfLines={1}>
                       {item.product.name}
                     </Text>
-                    
+
                     {/* Tempo previsto de saída */}
                     <View className="flex-row items-center mt-1">
                       <Clock size={12} color="#44A09E" />
@@ -201,7 +159,7 @@ export default function ClientHomeScreen() {
         {/* Catálogo Geral (Lista de Produtos) */}
         <View className="px-6 mt-6 pb-20">
           <Text className="text-lg font-bold text-tiffany dark:text-cream mb-4">Catálogo de Delícias</Text>
-          
+
           {loadingProducts ? (
             <ActivityIndicator size="large" color="#44A09E" className="mt-8" />
           ) : products.length === 0 ? (
@@ -214,16 +172,16 @@ export default function ClientHomeScreen() {
               {products.map((item: any) => {
                 const prodInfo = getProductProductionInfo(item.id);
                 const isTodayProduction = prodInfo !== null && prodInfo.available > 0;
-                
+
                 return (
                   <TouchableOpacity
                     key={item.id}
                     onPress={() => handleProductPress(item.id)}
                     className="flex-row bg-white dark:bg-zinc-800 p-3 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm mb-4"
                   >
-                    <Image 
-                      source={{ uri: item.images[0] }} 
-                      className="w-24 h-24 rounded-xl bg-gray-100" 
+                    <Image
+                      source={{ uri: item.images[0] }}
+                      className="w-24 h-24 rounded-xl bg-gray-100"
                       resizeMode="cover"
                     />
                     <View className="flex-1 ml-4 justify-between">
