@@ -15,10 +15,15 @@ module.exports = {
           DEFAULT: '#F5ECE1', // Nude suave para fundo/detalhes
           dark: '#E1D3BF',
         },
+        milk: {
+          light: '#F4F1EF',
+          DEFAULT: '#F4F1EF',
+          dark: '#e4dddbff',
+        },
         terracotta: {
-          light: '#E58A67',
-          DEFAULT: '#C0532E', // Marrom terracota rústico (cor do pão assado)
-          dark: '#8D3618',
+          light: '#68492E',
+          DEFAULT: '#68492E', // Marrom terracota rústico (cor do pão assado)
+          dark: '#68492E',
         },
         tiffany: {
           light: '#84D2D0',
