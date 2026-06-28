@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Croissant, Heart, Receipt, ShoppingBag, User } from 'lucide-react-native';
 
 export default function ClientLayout() {
   const colorScheme = useColorScheme();
@@ -28,9 +28,9 @@ export default function ClientLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Catálogo',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'restaurant' : 'restaurant-outline'} size={size} color={color} />
+          title: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Croissant size={size} color={color} />
           ),
         }}
       />
@@ -39,7 +39,7 @@ export default function ClientLayout() {
         options={{
           title: 'Favoritos',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'heart' : 'heart-outline'} size={size} color={color} />
+            <Heart size={size} color={color} fill={focused ? color : 'none'} />
           ),
         }}
       />
@@ -47,8 +47,8 @@ export default function ClientLayout() {
         name="orders"
         options={{
           title: 'Pedidos',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'receipt' : 'receipt-outline'} size={size} color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <ShoppingBag size={size} color={color} />
           ),
         }}
       />
@@ -57,7 +57,7 @@ export default function ClientLayout() {
         options={{
           title: 'Perfil',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
+            <User size={size} color={color} fill={focused ? color : 'none'} />
           ),
         }}
       />
