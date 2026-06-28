@@ -13,7 +13,7 @@ export default function ClientLayout() {
         tabBarActiveTintColor: '#44A09E', // Tiffany como cor principal
         tabBarInactiveTintColor: '#888',
         tabBarStyle: {
-          backgroundColor: '#FAF7F2',
+          backgroundColor: '#ffffffff',
           borderTopColor: '#E1D3BF',
           paddingBottom: 8,
           paddingTop: 6,
