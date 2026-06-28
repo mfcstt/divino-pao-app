@@ -1,0 +1,195 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CLIENTE
+  ADMINISTRADOR
+}
+
+enum OrderStatus {
+  RECEBIDO
+  EM_PRODUCAO
+  PRONTO
+  FINALIZADO
+  CANCELADO
+}
+
+enum PaymentMethod {
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  DINHEIRO
+}
+
+enum PaymentStatus {
+  PENDENTE
+  PAGO
+  REEMBOLSADO
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          Role      @default(CLIENTE)
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  sessions      Session[]
+  accounts      Account[]
+  orders        Order[]
+  favorites     Favorite[]
+  pushToken     String?   // Token para Expo Push Notifications
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId    String
+  providerId   String
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Product {
+  id               String              @id @default(uuid())
+  name             String
+  description      String
+  category         String              
+  price            Float
+  images           String[]            
+  isActive         Boolean             @default(true)
+  productionTime   Int                 
+  tags             String[]            
+  nutritionalInfo  String?             
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  ingredients      ProductIngredient[]
+  dailyProductions DailyProduction[]
+  orderItems       OrderItem[]
+  favoritedBy      Favorite[]
+}
+
+model Ingredient {
+  id           String              @id @default(uuid())
+  name         String              @unique
+  unit         String              
+  currentStock Float               
+  minStock     Float               
+  supplier     String?             
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  products     ProductIngredient[]
+}
+
+model ProductIngredient {
+  id           String     @id @default(uuid())
+  productId    String
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  quantity     Float      
+
+  @@unique([productId, ingredientId])
+}
+
+model DailyProduction {
+  id             String    @id @default(uuid())
+  date           DateTime  
+  productId      String
+  product        Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  targetQuantity Int       
+  soldQuantity   Int       @default(0) 
+  estimatedTime  String    
+  isActive       Boolean   @default(true) 
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([date, productId])
+}
+
+model Order {
+  id             String        @id @default(uuid())
+  userId         String?       
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  clientName     String        
+  clientPhone    String        
+  pickupDate     DateTime      
+  pickupTime     String        
+  notes          String?       
+  status         OrderStatus   @default(RECEBIDO)
+  paymentMethod  PaymentMethod
+  paymentStatus  PaymentStatus @default(PENDENTE)
+  total          Float
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  items          OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity  Int
+  price     Float    
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model AIRecommendation {
+  id          String   @id @default(uuid())
+  type        String   
+  message     String
+  suggestedAt DateTime @default(now())
+  isRead      Boolean  @default(false)
+}

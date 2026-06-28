@@ -1,0 +1,34 @@
+{
+  "name": "divino-pao-backend",
+  "version": "1.0.0",
+  "description": "Backend para a padaria artesanal Divino Pão",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ai-sdk/openai": "^0.0.29",
+    "@fastify/cors": "^9.0.1",
+    "@prisma/client": "^5.15.0",
+    "ai": "^3.1.30",
+    "better-auth": "^1.6.22",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "prisma": "^5.15.0",
+    "tsx": "^4.15.0",
+    "typescript": "^5.4.5"
+  }
+}
