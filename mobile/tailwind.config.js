@@ -36,6 +36,11 @@ module.exports = {
           dark: '#A67D16',
         }
       },
+      fontFamily: {
+        castle: ["CastleBegale"],
+        final: ["FinalSix"],
+        sans: ["FinalSix", "sans-serif"],
+      }
     },
   },
   plugins: [],

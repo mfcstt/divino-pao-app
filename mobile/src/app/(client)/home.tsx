@@ -2,9 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, ScrollView, TouchableOpacity, Image, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { apiRequest } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { Search, XCircle, Clock, Coffee } from 'lucide-react-native';
+import HomeHeader from '../../components/HomeHeader';
 
 export default function ClientHomeScreen() {
   const router = useRouter();
@@ -13,6 +14,8 @@ export default function ClientHomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState('Todos');
 
   const categories = ['Todos', 'Pães', 'Folhados', 'Doces', 'Bebidas'];
+
+
 
   // 1. Buscar produtos do catálogo
   const { 
@@ -66,36 +69,16 @@ export default function ClientHomeScreen() {
       className="flex-1 bg-cream-light dark:bg-[#150d0a]"
       refreshControl={<RefreshControl refreshing={refetchingProducts} onRefresh={onRefresh} />}
     >
-      {/* Header */}
-      <View className="px-6 pt-14 pb-4 flex-row justify-between items-center bg-[#FAF7F2] dark:bg-[#1a120e] border-b border-cream-dark/30 dark:border-zinc-800">
-        <View>
-          <Text className="text-xs text-gray-500 dark:text-gray-400 font-medium">Divino Pão</Text>
-          <Text className="text-xl font-bold text-terracotta dark:text-cream">
-            {user ? `Olá, ${user.name.split(' ')[0]} 👋` : 'Panificadora Artesanal'}
-          </Text>
-        </View>
-        {user ? (
-          <TouchableOpacity 
-            onPress={() => router.push('/(client)/profile')}
-            className="w-10 h-10 bg-tiffany rounded-full items-center justify-center border-2 border-white dark:border-zinc-700 shadow-sm"
-          >
-            <Text className="text-white font-bold">{user.name.slice(0, 2).toUpperCase()}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity 
-            onPress={() => router.push('/(auth)/login')}
-            className="flex-row items-center bg-tiffany px-4 py-2 rounded-full shadow-sm"
-          >
-            <Ionicons name="log-in-outline" size={16} color="#fff" />
-            <Text className="text-white text-xs font-bold ml-1">Entrar</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {/* Header Componentizado */}
+      <HomeHeader />
+
+      {/* Conteúdo Arredondado no Topo */}
+      <View className="flex-1 bg-cream-light dark:bg-[#150d0a] rounded-t-[32px] mt-[-24px] pt-6">
 
       {/* Caixa de Busca */}
       <View className="px-6 mt-6">
         <View className="flex-row items-center bg-white dark:bg-zinc-800 px-4 py-3 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm">
-          <Ionicons name="search-outline" size={20} color="#999" />
+          <Search size={20} color="#999" />
           <TextInput
             className="flex-1 ml-2 text-gray-700 dark:text-gray-200 text-sm"
             placeholder="Pesquisar pães, croissants..."
@@ -105,7 +88,7 @@ export default function ClientHomeScreen() {
           />
           {search.length > 0 && (
             <TouchableOpacity onPress={() => setSearch('')}>
-              <Ionicons name="close-circle" size={18} color="#999" />
+              <XCircle size={18} color="#999" />
             </TouchableOpacity>
           )}
         </View>
@@ -145,7 +128,7 @@ export default function ClientHomeScreen() {
                   
                   {/* Tempo previsto de saída */}
                   <View className="flex-row items-center mt-1">
-                    <Ionicons name="time-outline" size={12} color="#44A09E" />
+                    <Clock size={12} color="#44A09E" />
                     <Text className="text-tiffany text-xs font-semibold ml-1">Fresco às {item.estimatedTime}h</Text>
                   </View>
 
@@ -201,7 +184,7 @@ export default function ClientHomeScreen() {
           <ActivityIndicator size="large" color="#44A09E" className="mt-8" />
         ) : products.length === 0 ? (
           <View className="items-center justify-center py-12">
-            <Ionicons name="cafe-outline" size={48} color="#ccc" />
+            <Coffee size={48} color="#ccc" />
             <Text className="text-gray-400 dark:text-gray-500 mt-2 font-medium">Nenhum produto encontrado.</Text>
           </View>
         ) : (
@@ -258,6 +241,7 @@ export default function ClientHomeScreen() {
           </View>
         )}
       </View>
-    </ScrollView>
+    </View>
+  </ScrollView>
   );
 }

@@ -14,6 +14,7 @@ import Animated, {
 import { useAuth } from '../context/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '../services/api';
+import { useFonts } from 'expo-font';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -21,6 +22,12 @@ export default function SplashScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const queryClient = useQueryClient();
+
+  // Carrega as fontes personalizadas na inicialização
+  const [fontsLoaded, fontError] = useFonts({
+    'CastleBegale': require('../../assets/fonts/CastleBegale.ttf'),
+    'FinalSix': require('../../assets/fonts/FinalSix.otf'),
+  });
 
   // Animações com Reanimated
   const logoScale = useSharedValue(0.3);
@@ -63,8 +70,8 @@ export default function SplashScreen() {
       )
     );
 
-    // Quando o carregamento do Auth terminar, pré-carrega os dados do respectivo painel
-    if (!isLoading) {
+    // Quando o carregamento do Auth terminar E as fontes estiverem carregadas (ou falharem para não travar o app)
+    if (!isLoading && (fontsLoaded || fontError)) {
       const loadDataAndTransition = async () => {
         try {
           if (user) {
@@ -131,7 +138,7 @@ export default function SplashScreen() {
 
       loadDataAndTransition();
     }
-  }, [isLoading, user]);
+  }, [isLoading, user, fontsLoaded, fontError]);
 
   const logoAnimatedStyle = useAnimatedStyle(() => {
     return {
