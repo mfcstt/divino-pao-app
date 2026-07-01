@@ -92,61 +92,7 @@ export default function AdminDashboardScreen() {
       {/* Card Cream-Light de Conteúdo */}
       <View className="flex-1 bg-cream-light dark:bg-[#150d0a] rounded-t-[40px] p-6 space-y-6 pb-20 shadow-2xl">
 
-        {/* Atalhos de Ação Rápidos (Uma única linha horizontal estilo Categorias) */}
-        <View className="mb-2">
-          <Text className="text-xs font-bold text-stone-400 dark:text-zinc-300 uppercase tracking-wider mb-3">Painel de Controle</Text>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="-mx-6 py-1"
-            contentContainerStyle={{ paddingHorizontal: 24 }}
-          >
-            {/* Encomendas */}
-            <TouchableOpacity
-              onPress={() => router.push('/(admin)/orders')}
-              className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
-            >
-              <ShoppingBag size={14} color={isDark ? '#ccc' : '#666'} />
-              <Text className="text-gray-600 dark:text-gray-300 font-semibold text-xs ml-1.5">
-                Encomendas
-              </Text>
-            </TouchableOpacity>
-
-            {/* Produção */}
-            <TouchableOpacity
-              onPress={() => router.push('/(admin)/production')}
-              className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
-            >
-              <ChefHat size={14} color={isDark ? '#ccc' : '#666'} />
-              <Text className="text-gray-600 dark:text-gray-300 font-semibold text-xs ml-1.5">
-                Produção
-              </Text>
-            </TouchableOpacity>
-
-            {/* Estoque */}
-            <TouchableOpacity
-              onPress={() => router.push('/(admin)/ingredients')}
-              className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
-            >
-              <Wheat size={14} color={isDark ? '#ccc' : '#666'} />
-              <Text className="text-gray-600 dark:text-gray-300 font-semibold text-xs ml-1.5">
-                Estoque
-              </Text>
-            </TouchableOpacity>
-
-            {/* Catálogo */}
-            <TouchableOpacity
-              onPress={() => router.push('/(admin)/catalog')}
-              className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
-            >
-              <Croissant size={14} color={isDark ? '#ccc' : '#666'} />
-              <Text className="text-gray-600 dark:text-gray-300 font-semibold text-xs ml-1.5">
-                Catálogo
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
+        {/* O botão "Ver Loja" já está no cabeçalho. As antigas pílulas de atalho foram movidas para a Navbar inferior. */}
 
         {/* Alertas de Estoque */}
         {summary.alertasEstoqueCount > 0 && (
