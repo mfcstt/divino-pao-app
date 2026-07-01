@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ActivityIndicator, useColorScheme, Platform, Switch } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, ActivityIndicator, useColorScheme, Platform, Switch, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../context/AuthContext';
 import { apiRequest } from '../../services/api';
+import logoMarromNude from '../../../assets/LOGO MARROM COM NUDE.png';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -138,18 +139,54 @@ export default function ProfileScreen() {
 
   if (!user) {
     return (
-      <View className="flex-1 bg-cream-light dark:bg-[#150d0a] px-6 justify-center items-center">
-        <Ionicons name="person-outline" size={64} color="#44A09E" />
-        <Text className="text-xl font-bold text-tiffany mt-4 text-center">Minha Conta</Text>
-        <Text className="text-stone-400 dark:text-stone-200 mt-2 text-center text-sm px-6">
-          Entre na sua conta para editar dados cadastrais, gerenciar endereços e configurar notificações push.
-        </Text>
-        <TouchableOpacity
-          onPress={() => router.push('/(auth)/login')}
-          className="mt-6 bg-tiffany px-8 py-3.5 rounded-full w-full items-center shadow-sm active:opacity-90"
+      <View className="flex-1 bg-tiffany">
+        <ScrollView 
+          className="flex-1"
+          contentContainerStyle={{ flexGrow: 1 }}
+          bounces={false}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text className="text-white font-bold uppercase tracking-wider text-xs">Entrar na Conta</Text>
-        </TouchableOpacity>
+          {/* Cabeçalho com o Logotipo Oficial Marrom com Nude */}
+          <View className="h-[290px] justify-center items-center pt-8 bg-tiffany">
+            <Image 
+              source={logoMarromNude} 
+              style={{ width: 550, height: 550 }} 
+              resizeMode="contain" 
+            />
+          </View>
+
+          {/* Card Branco de Formulário */}
+          <View className="flex-1 bg-white dark:bg-zinc-900 rounded-t-[40px] px-8 pt-10 pb-10 shadow-2xl justify-center">
+            
+            {/* Título de Boas-Vindas */}
+            <View className="mb-6 items-center">
+              <Text className="text-2xl font-bold text-[#150d0a] dark:text-cream">
+                Minha Conta
+              </Text>
+              <Text className="text-[#999] dark:text-zinc-400 text-xs mt-1 text-center px-4">
+                Entre na sua conta para editar dados cadastrais, gerenciar endereços e configurar notificações push.
+              </Text>
+            </View>
+
+            {/* Botões de Ação */}
+            <View className="space-y-4">
+              <TouchableOpacity
+                onPress={() => router.push('/(auth)/signup')}
+                className="w-full bg-terracotta py-4 rounded-2xl items-center justify-center shadow-sm shadow-terracotta/20 active:opacity-90"
+              >
+                <Text className="text-white font-bold text-sm uppercase tracking-wider">Criar Conta</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => router.push('/(auth)/login')}
+                className="w-full border border-terracotta py-4 rounded-2xl items-center justify-center active:opacity-90 bg-white dark:bg-zinc-900 mt-4"
+              >
+                <Text className="text-terracotta font-bold text-sm uppercase tracking-wider">Entrar</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </ScrollView>
       </View>
     );
   }

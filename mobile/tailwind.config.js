@@ -26,9 +26,9 @@ module.exports = {
           dark: '#68492E',
         },
         tiffany: {
-          light: '#84D2D0',
-          DEFAULT: '#44A09E', // Tiffany vibrante para contraste e acentos modernos
-          dark: '#2C7371',
+          light: '#57ADAD',
+          DEFAULT: '#57ADAD', // Tiffany vibrante para contraste e acentos modernos
+          dark: '#57ADAD',
         },
         gold: {
           light: '#F8D87E',
