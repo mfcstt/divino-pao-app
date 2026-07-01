@@ -166,23 +166,33 @@ export default function AdminDashboardScreen() {
         )}
 
         {/* Indicadores Financeiros Rápidos */}
-        <View className="flex-row mb-2">
+        <View className="flex-row mb-6 mt-2">
           {/* Faturamento do Dia */}
-          <View className="bg-white dark:bg-zinc-900 p-5 rounded-[28px] border border-gray-100 dark:border-zinc-800 shadow-sm flex-1 mr-2">
-            <Text className="text-stone-400 dark:text-zinc-400 text-[10px] uppercase font-bold tracking-wider">Faturamento Dia</Text>
-            <Text className="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1">
+          <View className="bg-white dark:bg-[#1a120e] p-4 rounded-2xl border border-tiffany/20 dark:border-zinc-800 shadow-sm flex-1 mr-2">
+            <View className="flex-row items-center mb-1.5">
+              <View className="bg-tiffany/10 p-1.5 rounded-xl mr-2">
+                <Ionicons name="cash-outline" size={14} color="#44A09E" />
+              </View>
+              <Text className="text-[9px] text-tiffany font-bold uppercase tracking-wider">Hoje</Text>
+            </View>
+            <Text className="text-lg font-black text-tiffany dark:text-cream mt-0.5">
               R$ {summary.faturamentoDoDia.toFixed(2)}
             </Text>
-            <Text className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-2">{summary.pedidosDoDia} encomendas</Text>
+            <Text className="text-[9px] text-stone-400 dark:text-zinc-500 font-semibold mt-1">{summary.pedidosDoDia} encomendas</Text>
           </View>
 
           {/* Faturamento do Mês */}
-          <View className="bg-white dark:bg-zinc-900 p-5 rounded-[28px] border border-gray-100 dark:border-zinc-800 shadow-sm flex-1 ml-2">
-            <Text className="text-stone-400 dark:text-zinc-400 text-[10px] uppercase font-bold tracking-wider">Faturamento Mês</Text>
-            <Text className="text-lg font-black text-terracotta mt-1">
+          <View className="bg-white dark:bg-[#1a120e] p-4 rounded-2xl border border-terracotta/20 dark:border-zinc-800 shadow-sm flex-1 ml-2">
+            <View className="flex-row items-center mb-1.5">
+              <View className="bg-terracotta/10 p-1.5 rounded-xl mr-2">
+                <Ionicons name="trending-up-outline" size={14} color="#68492E" />
+              </View>
+              <Text className="text-[9px] text-terracotta font-bold uppercase tracking-wider">Mês</Text>
+            </View>
+            <Text className="text-lg font-black text-terracotta dark:text-terracotta-light mt-0.5">
               R$ {summary.faturamentoMensal.toFixed(2)}
             </Text>
-            <Text className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-2">Média: R$ {summary.ticketMedio.toFixed(2)}</Text>
+            <Text className="text-[9px] text-stone-400 dark:text-zinc-500 font-semibold mt-1">Média: R$ {summary.ticketMedio.toFixed(2)}</Text>
           </View>
         </View>
 
