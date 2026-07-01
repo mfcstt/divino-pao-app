@@ -5,9 +5,11 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { apiRequest } from '../../services/api';
 import { Croissant, Wheat, ChefHat, ShoppingBag } from 'lucide-react-native';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboardScreen() {
   const router = useRouter();
+  const { logout } = useAuth();
   const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -94,13 +96,21 @@ export default function AdminDashboardScreen() {
           <Text className="text-xs text-tiffany font-bold">{getFormattedDate()}</Text>
         </View>
 
-        <TouchableOpacity
-          onPress={() => router.replace('/(client)/home')}
-          className="bg-white/15 px-4 py-2.5 rounded-full flex-row items-center border border-white/20 active:opacity-90 shadow-sm mt-1"
-        >
-          <Ionicons name="eye-outline" size={16} color="#fff" />
-          <Text className="text-white text-xs font-bold ml-1.5">Ver Loja</Text>
-        </TouchableOpacity>
+        <View className="flex-row items-center mt-1">
+          <TouchableOpacity
+            onPress={logout}
+            className="p-2 mr-1 active:opacity-70"
+          >
+            <Ionicons name="log-out-outline" size={20} color="rgba(255,255,255,0.7)" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.replace('/(client)/home')}
+            className="bg-white/15 px-4 py-2.5 rounded-full flex-row items-center border border-white/20 active:opacity-90 shadow-sm"
+          >
+            <Ionicons name="eye-outline" size={16} color="#fff" />
+            <Text className="text-white text-xs font-bold ml-1.5">Ver Loja</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Card Cream-Light de Conteúdo */}
