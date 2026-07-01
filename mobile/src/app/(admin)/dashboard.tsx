@@ -67,22 +67,36 @@ export default function AdminDashboardScreen() {
     alertasEstoqueCount: 0
   };
 
+  const getFormattedDate = () => {
+    const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+    const months = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    const d = new Date();
+    return `${days[d.getDay()]}, ${d.getDate()} de ${months[d.getMonth()]}`;
+  };
+
   return (
     <ScrollView
-      className="flex-1 bg-tiffany"
+      className="flex-1 bg-terracotta"
       contentContainerStyle={{ flexGrow: 1 }}
       bounces={true}
       refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} tintColor="#fff" />}
     >
-      {/* Header Premium Tiffany */}
-      <View className="px-6 pt-14 pb-10 bg-tiffany dark:bg-[#1d3d3c] flex-row justify-between items-center">
-        <View>
-          <Text className="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Painel do Administrador</Text>
-          <Text className="text-2xl font-black text-white mt-0.5">Dashboard</Text>
+      {/* Header Premium Terracotta */}
+      <View className="px-6 pt-14 pb-10 bg-terracotta dark:bg-[#3d271d] flex-row justify-between items-start">
+        <View className="flex-1">
+          <Text className="text-[10px] text-white/70 font-semibold uppercase tracking-wider mb-2">Painel da loja</Text>
+          
+          <View className="flex-row items-center mb-1">
+            <Text className="text-3xl text-white mr-2 font-castle">Olá, Sheila</Text>
+            <ChefHat size={22} color="#fff" />
+          </View>
+          
+          <Text className="text-xs text-tiffany font-bold">{getFormattedDate()}</Text>
         </View>
+
         <TouchableOpacity
           onPress={() => router.replace('/(client)/home')}
-          className="bg-white/15 px-4 py-2.5 rounded-full flex-row items-center border border-white/20 active:opacity-90 shadow-sm"
+          className="bg-white/15 px-4 py-2.5 rounded-full flex-row items-center border border-white/20 active:opacity-90 shadow-sm mt-1"
         >
           <Ionicons name="eye-outline" size={16} color="#fff" />
           <Text className="text-white text-xs font-bold ml-1.5">Ver Loja</Text>
