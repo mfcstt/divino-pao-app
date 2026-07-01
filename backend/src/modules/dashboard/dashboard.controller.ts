@@ -141,15 +141,43 @@ export async function dashboardRoutes(fastify: FastifyInstance) {
         LIMIT 3
       `;
 
-      // 11. Produção do dia (Visão Geral de ontem/hoje)
+      // 11. Produção do dia (Visão Geral de hoje)
       const producaoDoDia = await prisma.dailyProduction.findMany({
-        where: { date: hojeInicio },
+        where: { 
+          date: { gte: hojeInicio, lte: hojeFim },
+          isActive: true
+        },
         include: {
           product: {
-            select: { name: true, price: true }
+            select: { id: true, name: true, price: true }
           }
         }
       });
+
+      const producaoComVendasReais = await Promise.all(producaoDoDia.map(async (p) => {
+        const soldResult = await prisma.orderItem.aggregate({
+          where: {
+            productId: p.productId,
+            order: {
+              pickupDate: { gte: hojeInicio, lte: hojeFim },
+              status: { not: 'CANCELADO' }
+            }
+          },
+          _sum: {
+            quantity: true
+          }
+        });
+        
+        const sold = soldResult._sum.quantity || 0;
+        
+        return {
+          name: p.product.name,
+          target: p.targetQuantity,
+          sold: sold,
+          time: p.estimatedTime,
+          progress: p.targetQuantity > 0 ? Math.min(100, (sold / p.targetQuantity) * 100) : 0
+        };
+      }));
 
       return reply.send({
         summary: {
@@ -166,13 +194,7 @@ export async function dashboardRoutes(fastify: FastifyInstance) {
         alertasEstoque,
         peakHours,
         monthlySalesEvolution,
-        producaoDoDia: producaoDoDia.map(p => ({
-          name: p.product.name,
-          target: p.targetQuantity,
-          sold: p.soldQuantity,
-          time: p.estimatedTime,
-          progress: p.targetQuantity > 0 ? (p.soldQuantity / p.targetQuantity) * 100 : 0
-        }))
+        producaoDoDia: producaoComVendasReais
       });
     } catch (error) {
       console.error(error);

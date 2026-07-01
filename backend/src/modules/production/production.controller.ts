@@ -70,6 +70,12 @@ export async function productionRoutes(fastify: FastifyInstance) {
 
       // Usar transação para apagar e recriar ou atualizar produções diárias
       const result = await prisma.$transaction(async (tx) => {
+        // Primeiro, desativa tudo deste dia
+        await tx.dailyProduction.updateMany({
+          where: { date },
+          data: { isActive: false }
+        });
+
         const createdItems = [];
 
         for (const item of body.items) {

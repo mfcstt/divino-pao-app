@@ -95,15 +95,15 @@ export default function AdminDashboardScreen() {
         {/* Atalhos de Ação Rápidos (Uma única linha horizontal estilo Categorias) */}
         <View className="mb-2">
           <Text className="text-xs font-bold text-stone-400 dark:text-zinc-300 uppercase tracking-wider mb-3">Painel de Controle</Text>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             className="-mx-6 py-1"
             contentContainerStyle={{ paddingHorizontal: 24 }}
           >
             {/* Encomendas */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push('/(admin)/orders')}
               className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
             >
@@ -114,7 +114,7 @@ export default function AdminDashboardScreen() {
             </TouchableOpacity>
 
             {/* Produção */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push('/(admin)/production')}
               className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
             >
@@ -125,7 +125,7 @@ export default function AdminDashboardScreen() {
             </TouchableOpacity>
 
             {/* Estoque */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push('/(admin)/ingredients')}
               className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
             >
@@ -136,7 +136,7 @@ export default function AdminDashboardScreen() {
             </TouchableOpacity>
 
             {/* Catálogo */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push('/(admin)/catalog')}
               className="px-4 py-2.5 rounded-full mr-3 border flex-row items-center justify-center bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm active:opacity-90"
             >
@@ -196,8 +196,50 @@ export default function AdminDashboardScreen() {
           </View>
         </View>
 
+        {/* Produção Diária (Status Hoje) */}
+        {dashboardData?.producaoDoDia && dashboardData.producaoDoDia.length > 0 && (
+          <View className="bg-white dark:bg-[#1a120e] p-6 rounded-[32px] border border-gray-100 dark:border-zinc-800 shadow-sm mb-6">
+            <View className="flex-row items-center mb-6">
+              <View className="bg-terracotta/10 p-2.5 rounded-2xl mr-3">
+                <Ionicons name="pie-chart-outline" size={20} color="#68492E" />
+              </View>
+              <View>
+                <Text className="text-xs font-black text-terracotta uppercase tracking-wider">
+                  Produção & Vendas
+                </Text>
+                <Text className="text-[9px] text-stone-400 dark:text-zinc-500 font-bold uppercase mt-0.5">Acompanhamento Diário</Text>
+              </View>
+            </View>
+
+            {dashboardData.producaoDoDia.map((p: any) => {
+              const perc = Math.min(100, Math.round(p.progress || 0));
+              return (
+                <View key={p.name} className="mb-5 last:mb-1">
+                  <View className="flex-row justify-between items-end mb-2">
+                    <View>
+                      <Text className="text-zinc-800 dark:text-zinc-100 text-sm font-bold">{p.name}</Text>
+                      <Text className="text-stone-400 dark:text-zinc-500 text-[10px] font-bold mt-0.5">META: {p.target} UN</Text>
+                    </View>
+                    <View className="items-end">
+                      <Text className="text-tiffany font-black text-lg">{p.sold} <Text className="text-[10px] text-stone-400 font-semibold tracking-wide">VENDIDOS</Text></Text>
+                      <Text className="text-terracotta font-bold text-[10px]">{perc}% concluído</Text>
+                    </View>
+                  </View>
+                  {/* Barra de Progresso */}
+                  <View className="w-full bg-cream-dark/30 dark:bg-zinc-800 h-3 rounded-full overflow-hidden">
+                    <View
+                      style={{ width: `${perc}%` }}
+                      className={`${perc >= 100 ? 'bg-emerald-500' : 'bg-tiffany'} h-full rounded-full`}
+                    />
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
+
         {/* Recomendação da IA (Destaque do Dashboard) */}
-        <View className="mb-2">
+        {/* <View className="mb-2">
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-xs font-bold text-stone-400 dark:text-zinc-300 uppercase tracking-wider">
               Insights do Agente IA 🤖
@@ -235,31 +277,9 @@ export default function AdminDashboardScreen() {
               })}
             </ScrollView>
           )}
-        </View>
+        </View> */}
 
-        {/* Produção Diária (Status Hoje) */}
-        {dashboardData?.producaoDoDia && dashboardData.producaoDoDia.length > 0 && (
-          <View className="bg-white dark:bg-zinc-900 p-5 rounded-[28px] border border-gray-100 dark:border-zinc-800 shadow-sm pb-6 mb-12">
-            <Text className="text-xs font-bold text-stone-400 dark:text-zinc-300 uppercase tracking-wider mb-4">
-              Status da Produção do Dia
-            </Text>
-            {dashboardData.producaoDoDia.map((p: any) => (
-              <View key={p.name} className="mb-4">
-                <View className="flex-row justify-between items-center mb-1">
-                  <Text className="text-zinc-800 dark:text-zinc-200 text-xs font-semibold">{p.name}</Text>
-                  <Text className="text-zinc-500 dark:text-zinc-400 text-[10px]">{p.sold} de {p.target} vendidos ({p.time}h)</Text>
-                </View>
-                {/* Barra de Progresso */}
-                <View className="w-full bg-cream-light dark:bg-zinc-800 h-2.5 rounded-full overflow-hidden">
-                  <View
-                    style={{ width: `${Math.min(100, p.progress)}%` }}
-                    className="bg-terracotta h-full rounded-full"
-                  />
-                </View>
-              </View>
-            ))}
-          </View>
-        )}
+
       </View>
     </ScrollView>
   );
