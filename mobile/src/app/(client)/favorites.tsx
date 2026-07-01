@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { apiRequest } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -17,6 +17,14 @@ export default function FavoritesScreen() {
     queryFn: () => apiRequest('/favorites'),
     enabled: !!user
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (user) {
+        refetch();
+      }
+    }, [refetch, user])
+  );
 
   // 2. Mutação para remover dos favoritos
   const removeFavoriteMutation = useMutation({
@@ -41,19 +49,17 @@ export default function FavoritesScreen() {
   if (!user) {
     return (
       <View className="flex-1 bg-cream-light dark:bg-[#150d0a] px-6 justify-center items-center">
-        <View className="p-6 bg-white dark:bg-zinc-800 rounded-3xl items-center shadow-sm w-full border border-gray-100 dark:border-zinc-700">
-          <Ionicons name="heart-dislike-outline" size={64} color="#C0532E" />
-          <Text className="text-xl font-bold text-terracotta mt-4 text-center">Favoritos Exclusivos</Text>
-          <Text className="text-gray-500 dark:text-gray-400 mt-2 text-center text-sm">
-            Crie uma conta ou faça login para favoritar suas delícias e encontrá-las facilmente depois.
-          </Text>
-          <TouchableOpacity
-            onPress={() => router.push('/(auth)/login')}
-            className="mt-6 bg-terracotta px-8 py-3 rounded-full w-full items-center"
-          >
-            <Text className="text-white font-bold uppercase tracking-wider text-xs">Entrar ou Cadastrar</Text>
-          </TouchableOpacity>
-        </View>
+        <Ionicons name="heart-dislike-outline" size={64} color="#44A09E" />
+        <Text className="text-xl font-bold text-tiffany mt-4 text-center">Favoritos</Text>
+        <Text className="text-stone-400 dark:text-milk-light mt-2 text-center text-sm px-6">
+          Crie uma conta ou faça login para favoritar suas delícias e encontrá-las facilmente depois.
+        </Text>
+        <TouchableOpacity
+          onPress={() => router.push('/(auth)/login')}
+          className="mt-6 bg-tiffany px-8 py-3.5 rounded-full w-full items-center shadow-sm active:opacity-90"
+        >
+          <Text className="text-white font-bold uppercase tracking-wider text-xs">Entrar ou Cadastrar</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -63,38 +69,40 @@ export default function FavoritesScreen() {
       {/* Header */}
       <View className="px-6 pt-14 pb-4 bg-[#FAF7F2] dark:bg-[#1a120e] border-b border-cream-dark/30 dark:border-zinc-800">
         <Text className="text-xs text-gray-500 dark:text-gray-400 font-medium">Meus Preferidos</Text>
-        <Text className="text-xl font-bold text-terracotta dark:text-cream">Produtos Favoritos</Text>
+        <Text className="text-xl font-bold text-tiffany dark:text-cream">Produtos Favoritos</Text>
       </View>
 
       <View className="p-6 pb-20">
         {isLoading ? (
           <ActivityIndicator size="large" color="#C0532E" className="mt-8" />
         ) : favorites.length === 0 ? (
-          <View className="items-center justify-center py-20 bg-white dark:bg-zinc-800/50 rounded-3xl p-6 border border-dashed border-gray-200 dark:border-zinc-700">
-            <Ionicons name="heart-outline" size={48} color="#ccc" />
-            <Text className="text-gray-400 dark:text-gray-500 mt-4 text-center font-medium">Nenhum favorito salvo ainda.</Text>
-            <Text className="text-gray-400 dark:text-gray-500 text-xs text-center mt-1">Navegue no catálogo e favorite seus pães favoritos.</Text>
-            <TouchableOpacity 
-              onPress={() => router.replace('/(client)/home')} 
-              className="mt-6 bg-tiffany px-6 py-2.5 rounded-full"
+          <View className="items-center justify-center py-20">
+            <Ionicons name="heart-outline" size={56} color="#44A09E" />
+            <Text className="text-tiffany font-bold mt-4 text-center">Nenhum favorito salvo ainda.</Text>
+            <Text className="text-milk-dark dark:text-milk-light text-xs text-center mt-1 px-6">
+              Navegue no catálogo e favorite seus pães favoritos.
+            </Text>
+            <TouchableOpacity
+              onPress={() => router.replace('/(client)/home')}
+              className="mt-6 bg-tiffany px-8 py-3 rounded-full shadow-sm active:opacity-90"
             >
-              <Text className="text-white font-bold text-xs">Ver Catálogo</Text>
+              <Text className="text-white font-bold text-xs uppercase tracking-wider">Ver Catálogo</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <View className="space-y-4">
             {favorites.map((item: any) => (
-              <View 
-                key={item.id} 
+              <View
+                key={item.id}
                 className="flex-row bg-white dark:bg-zinc-800 p-3 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm mb-4"
               >
-                <TouchableOpacity 
-                  onPress={() => handleProductPress(item.id)} 
+                <TouchableOpacity
+                  onPress={() => handleProductPress(item.id)}
                   className="flex-row flex-1"
                 >
-                  <Image 
-                    source={{ uri: item.images[0] }} 
-                    className="w-20 h-20 rounded-xl bg-gray-100" 
+                  <Image
+                    source={{ uri: item.images[0] }}
+                    className="w-20 h-20 rounded-xl bg-gray-100"
                     resizeMode="cover"
                   />
                   <View className="flex-1 ml-4 justify-center">
@@ -106,7 +114,7 @@ export default function FavoritesScreen() {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={() => handleRemoveFavorite(item.id)}
                   className="p-2 justify-center items-center"
                 >

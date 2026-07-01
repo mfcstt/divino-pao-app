@@ -57,7 +57,10 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Erro de requisição: ${response.status}`);
+      const message = errorData.error || `Erro de requisição: ${response.status}`;
+      const err = new Error(message) as any;
+      err.status = response.status;
+      throw err;
     }
 
     // Se a resposta for vazia (ex: no-content)
@@ -65,7 +68,10 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
 
     return await response.json();
   } catch (error: any) {
-    console.error(`[API Request Error] ${url}:`, error.message);
+    // Não exibir log de erro vermelho no console para erros HTTP esperados (como 401/403/400)
+    if (error.status !== 401 && error.status !== 403 && error.status !== 400) {
+      console.warn(`[API Request Error] ${url}:`, error.message);
+    }
     throw error;
   }
 }

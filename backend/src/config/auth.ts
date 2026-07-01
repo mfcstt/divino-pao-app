@@ -7,9 +7,9 @@ export const auth = betterAuth({
     provider: 'postgresql',
   }),
   trustedOrigins: [
-    'http://192.168.2.120:3000',
+    'http://192.168.0.7:3000',
     'http://localhost:3000',
-    'exp://192.168.2.120:8081',
+    'exp://192.168.0.7:8081',
     'exp://localhost:8081'
   ],
   emailAndPassword: {

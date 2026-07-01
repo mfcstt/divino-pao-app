@@ -70,7 +70,7 @@ export default function ProfileScreen() {
     if (value) {
       // Ativar notificações
       if (Platform.OS === 'web') return;
-      
+
       if (!Device.isDevice) {
         Alert.alert('Aviso ⚠️', 'Notificações push só funcionam em dispositivos físicos reais. Configure um EAS Project ID no seu app.json para habilitar em produção.');
         return;
@@ -139,19 +139,17 @@ export default function ProfileScreen() {
   if (!user) {
     return (
       <View className="flex-1 bg-cream-light dark:bg-[#150d0a] px-6 justify-center items-center">
-        <View className="p-6 bg-white dark:bg-zinc-800 rounded-3xl items-center shadow-sm w-full border border-gray-100 dark:border-zinc-700">
-          <Ionicons name="person-outline" size={64} color="#C0532E" />
-          <Text className="text-xl font-bold text-terracotta mt-4 text-center">Minha Conta</Text>
-          <Text className="text-gray-500 dark:text-gray-400 mt-2 text-center text-sm">
-            Entre na sua conta para editar dados cadastrais, gerenciar endereços e configurar notificações push.
-          </Text>
-          <TouchableOpacity
-            onPress={() => router.push('/(auth)/login')}
-            className="mt-6 bg-terracotta px-8 py-3 rounded-full w-full items-center"
-          >
-            <Text className="text-white font-bold uppercase tracking-wider text-xs">Entrar na Conta</Text>
-          </TouchableOpacity>
-        </View>
+        <Ionicons name="person-outline" size={64} color="#44A09E" />
+        <Text className="text-xl font-bold text-tiffany mt-4 text-center">Minha Conta</Text>
+        <Text className="text-stone-400 dark:text-stone-200 mt-2 text-center text-sm px-6">
+          Entre na sua conta para editar dados cadastrais, gerenciar endereços e configurar notificações push.
+        </Text>
+        <TouchableOpacity
+          onPress={() => router.push('/(auth)/login')}
+          className="mt-6 bg-tiffany px-8 py-3.5 rounded-full w-full items-center shadow-sm active:opacity-90"
+        >
+          <Text className="text-white font-bold uppercase tracking-wider text-xs">Entrar na Conta</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -161,7 +159,7 @@ export default function ProfileScreen() {
       {/* Header */}
       <View className="px-6 pt-14 pb-4 bg-[#FAF7F2] dark:bg-[#1a120e] border-b border-cream-dark/30 dark:border-zinc-800">
         <Text className="text-xs text-gray-500 dark:text-gray-400 font-medium">Configurações</Text>
-        <Text className="text-xl font-bold text-terracotta dark:text-cream">Minha Conta</Text>
+        <Text className="text-xl font-bold text-tiffany dark:text-cream">Minha Conta</Text>
       </View>
 
       <View className="p-6 space-y-6 pb-20">
@@ -183,10 +181,10 @@ export default function ProfileScreen() {
         {/* Informações Gerais */}
         <View className="bg-white dark:bg-zinc-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-zinc-700">
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="font-bold text-terracotta text-sm uppercase tracking-wider">Dados Pessoais</Text>
+            <Text className="font-bold text-tiffany text-sm uppercase tracking-wider">Dados Pessoais</Text>
             {!editing ? (
               <TouchableOpacity onPress={() => setEditing(true)}>
-                <Ionicons name="create-outline" size={20} color="#C0532E" />
+                <Ionicons name="create-outline" size={20} color="#44A09E" />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setEditing(false)}>
@@ -200,7 +198,7 @@ export default function ProfileScreen() {
               <View>
                 <Text className="text-xs text-gray-400 font-semibold mb-1">Nome Completo</Text>
                 <TextInput
-                  className="bg-cream-light dark:bg-zinc-700 text-gray-800 dark:text-gray-100 px-4 py-2.5 rounded-xl border border-gray-100 dark:border-zinc-600 focus:border-terracotta"
+                  className="bg-cream-light dark:bg-zinc-700 text-gray-800 dark:text-gray-100 px-4 py-2.5 rounded-xl border border-gray-100 dark:border-zinc-600 focus:border-tiffany"
                   value={name}
                   onChangeText={setName}
                 />
@@ -209,7 +207,7 @@ export default function ProfileScreen() {
               <View className="mt-3">
                 <Text className="text-xs text-gray-400 font-semibold mb-1">WhatsApp / Celular</Text>
                 <TextInput
-                  className="bg-cream-light dark:bg-zinc-700 text-gray-800 dark:text-gray-100 px-4 py-2.5 rounded-xl border border-gray-100 dark:border-zinc-600 focus:border-terracotta"
+                  className="bg-cream-light dark:bg-zinc-700 text-gray-800 dark:text-gray-100 px-4 py-2.5 rounded-xl border border-gray-100 dark:border-zinc-600 focus:border-tiffany"
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
@@ -219,9 +217,9 @@ export default function ProfileScreen() {
               <TouchableOpacity
                 onPress={handleUpdate}
                 disabled={loading}
-                className="bg-terracotta py-3 rounded-xl mt-4 items-center justify-center"
+                className="bg-tiffany py-3 rounded-xl mt-4 items-center justify-center shadow-sm active:opacity-90"
               >
-                {loading ? <ActivityIndicator color="#fff" /> : <Text className="text-white font-bold">Salvar Dados</Text>}
+                {loading ? <ActivityIndicator color="#fff" /> : <Text className="text-white font-bold uppercase tracking-wider text-xs">Salvar Dados</Text>}
               </TouchableOpacity>
             </View>
           ) : (
@@ -246,7 +244,7 @@ export default function ProfileScreen() {
         <View className="bg-white dark:bg-zinc-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-zinc-700 mt-4">
           <View className="flex-row justify-between items-center">
             <View className="flex-1 pr-4">
-              <Text className="font-bold text-terracotta text-sm uppercase tracking-wider">Notificações Push</Text>
+              <Text className="font-bold text-tiffany text-sm uppercase tracking-wider">Notificações Push</Text>
               <Text className="text-gray-400 text-xs mt-1">Receba avisos instantâneos quando o seu pão estiver saindo do forno.</Text>
             </View>
             <Switch
